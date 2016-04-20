@@ -3,8 +3,8 @@
 
 
 Name:           micropython
-Version:        1.6
-Release:        3%{?dist}
+Version:        1.7
+Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 License:        MIT
 URL:            http://micropython.org/
@@ -48,6 +48,9 @@ install -pm 755 unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Tue Apr 19 2016 John Dulaney <jdulaney@fedoraproject.org> - 1.7-1
+* Update to 1.7
+
 * Tue Apr 05 2016 John Dulaney <jdulaney@fedoraproject.org> - 1.6-3
 - Remove license-encumbered bits in stmhal/
 
