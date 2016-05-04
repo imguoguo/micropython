@@ -3,7 +3,7 @@
 
 
 Name:           micropython
-Version:        1.7
+Version:        1.8
 Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 License:        MIT
@@ -48,6 +48,9 @@ install -pm 755 unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Wed May 04 2016 John Dulaney <jdulaney@fedoraproject.org> - 1.8-1
+* Update to 1.8
+
 * Tue Apr 19 2016 John Dulaney <jdulaney@fedoraproject.org> - 1.7-1
 * Update to 1.7
 
