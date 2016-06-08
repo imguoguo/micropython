@@ -15,6 +15,7 @@ BuildRequires:  python3-devel
 BuildRequires:  libffi-devel
 BuildRequires:  readline-devel
 BuildRequires:  execstack
+BuildRequires:  openssl-devel
 
 %description
 Implementation of Python 3 with very low memory footprint
