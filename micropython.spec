@@ -4,11 +4,14 @@
 
 Name:           micropython
 Version:        1.8.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 License:        MIT
 URL:            http://micropython.org/
 Source0:        https://github.com/micropython/micropython/archive/v%{version}.tar.gz
+
+# Other arches need active porting
+ExclusiveArch:  %{arm} %{ix86} x86_64
 
 BuildRequires:  python-devel
 BuildRequires:  python3-devel
@@ -49,6 +52,9 @@ install -pm 755 unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Sat Aug 13 2016 Peter Robinson <pbrobinson@fedoraproject.org> 1.8.1-2
+- Add ExclusiveArch, other arches need active porting
+
 * Wed Jun 06 2016 John Dulaney <jdulaney@fedoraproject.org> - 1.8.1-1
 - Update to 1.8.1
 
