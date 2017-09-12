@@ -3,12 +3,22 @@
 
 
 Name:           micropython
-Version:        1.8.1
-Release:        5%{?dist}
+Version:        1.9.2
+Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
-License:        MIT
+
+# micorpython itself is MIT
+# axtls and berkeley-db are BSD
+License:        MIT and BSD
+
 URL:            http://micropython.org/
 Source0:        https://github.com/micropython/micropython/archive/v%{version}.tar.gz
+
+%global axtls_commit 9b3092eb3b4b230a63c0c389bfbd3c55682c620f
+Source1:       https://github.com/pfalcon/axtls/archive/%{axtls_commit}/axtls-%{axtls_commit}.tar.gz
+
+%global berkley_commit dab957dacddcbf6cbc85d42df62e189e4877bb72
+Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_commit}/berkeley-db-1.xx-%{berkley_commit}.tar.gz
 
 # Other arches need active porting
 ExclusiveArch:  %{arm} %{ix86} x86_64
@@ -20,11 +30,28 @@ BuildRequires:  readline-devel
 BuildRequires:  execstack
 BuildRequires:  openssl-devel
 
+Provides:       bundled(axtls)
+Provides:       bundled(libdb) = 1.85
+
 %description
 Implementation of Python 3 with very low memory footprint
 
 %prep
 %setup -q -n %{name}-%{version}
+
+# git submodules
+rmdir lib/axtls
+tar -xf %{SOURCE1}
+mv axtls-%{axtls_commit} lib/axtls
+
+head -n 28 lib/axtls/axtlswrap/Makefile > LICENSE.axtls
+
+rmdir lib/berkeley-db-1.xx
+tar -xf %{SOURCE2}
+mv berkeley-db-1.xx-%{berkley_commit} lib/berkeley-db-1.xx
+
+head -n 32 lib/berkeley-db-1.xx/db/db.c > LICENSE.libdb
+
 
 # Removing due to non-free license; not required for build
 rm -r stmhal/
@@ -33,7 +60,10 @@ rm -r stmhal/
 rm cc3200/bootmgr/relocator/relocator.bin
 
 %build
-make -C unix V=1
+pushd unix
+make axtls V=1 %{?_smp_mflags}
+make V=1 %{?_smp_mflags}
+popd
 
 execstack -c unix/micropython
 
@@ -48,10 +78,15 @@ install -pm 755 unix/micropython %{buildroot}%{_bindir}
 
 %files
 %doc README.md
-%license LICENSE
+%license LICENSE LICENSE.axtls LICENSE.libdb
 %{_bindir}/micropython
 
 %changelog
+* Tue Sep 12 2017 Miro Hrončok <mhroncok@redhat.com> - 1.9.2-1
+- Update to 1.9.2 (#1332739) and fix FTBFS (#1423943)
+- Add 2 git submodules to sources, add bundled provides
+- Changed license tag to include BSD (becasue of those submodules)
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
