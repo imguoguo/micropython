@@ -3,7 +3,7 @@
 
 
 Name:           micropython
-Version:        1.9.2
+Version:        1.9.3
 Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
@@ -14,10 +14,10 @@ License:        MIT and BSD
 URL:            http://micropython.org/
 Source0:        https://github.com/micropython/micropython/archive/v%{version}.tar.gz
 
-%global axtls_commit 9b3092eb3b4b230a63c0c389bfbd3c55682c620f
+%global axtls_commit dac9176cac58cc5e49669a9a4d404a6f6dd7cc10
 Source1:       https://github.com/pfalcon/axtls/archive/%{axtls_commit}/axtls-%{axtls_commit}.tar.gz
 
-%global berkley_commit dab957dacddcbf6cbc85d42df62e189e4877bb72
+%global berkley_commit 35aaec4418ad78628a3b935885dd189d41ce779b
 Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_commit}/berkeley-db-1.xx-%{berkley_commit}.tar.gz
 
 # Other arches need active porting
@@ -52,29 +52,25 @@ mv berkeley-db-1.xx-%{berkley_commit} lib/berkeley-db-1.xx
 
 head -n 32 lib/berkeley-db-1.xx/db/db.c > LICENSE.libdb
 
-
-# Removing due to non-free license; not required for build
-rm -r stmhal/
-
 # Removing pre-built binary; not required for build
-rm cc3200/bootmgr/relocator/relocator.bin
+rm ports/cc3200/bootmgr/relocator/relocator.bin
 
 %build
-pushd unix
+pushd ports/unix
 make axtls V=1 %{?_smp_mflags}
 make V=1 %{?_smp_mflags}
 popd
 
-execstack -c unix/micropython
+execstack -c ports/unix/micropython
 
 %check
-pushd unix
+pushd ports/unix
 make test
 popd
 
 %install
 mkdir -p %{buildroot}%{_bindir}
-install -pm 755 unix/micropython %{buildroot}%{_bindir}
+install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 
 %files
 %doc README.md
@@ -82,6 +78,9 @@ install -pm 755 unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Wed Nov 01 2017 Miro Hrončok <mhroncok@redhat.com> - 1.9.3-1
+- Update to 1.9.3 (#1508424)
+
 * Tue Sep 12 2017 Miro Hrončok <mhroncok@redhat.com> - 1.9.2-1
 - Update to 1.9.2 (#1332739) and fix FTBFS (#1423943)
 - Add 2 git submodules to sources, add bundled provides
