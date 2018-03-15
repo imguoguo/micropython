@@ -4,7 +4,7 @@
 
 Name:           micropython
 Version:        1.9.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -24,7 +24,7 @@ Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_com
 ExclusiveArch:  %{arm} %{ix86} x86_64
 
 BuildRequires:  gcc
-BuildRequires:  python-devel
+BuildRequires:  python2-devel
 BuildRequires:  python3-devel
 BuildRequires:  libffi-devel
 BuildRequires:  readline-devel
@@ -79,6 +79,10 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Thu Mar 15 2018 Iryna Shcherbina <ishcherb@redhat.com> - 1.9.3-3
+- Update Python 2 dependency declarations to new packaging standards
+  (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
+
 * Thu Feb 08 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
