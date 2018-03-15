@@ -4,7 +4,7 @@
 
 Name:           micropython
 Version:        1.9.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -24,7 +24,6 @@ Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_com
 ExclusiveArch:  %{arm} %{ix86} x86_64
 
 BuildRequires:  gcc
-BuildRequires:  python2-devel
 BuildRequires:  python3-devel
 BuildRequires:  libffi-devel
 BuildRequires:  readline-devel
@@ -53,20 +52,24 @@ mv berkeley-db-1.xx-%{berkley_commit} lib/berkeley-db-1.xx
 
 head -n 32 lib/berkeley-db-1.xx/db/db.c > LICENSE.libdb
 
+# Fix shebangs
+files=$(grep -rl '#!/usr/bin/env python')
+pathfix.py -i %{__python3} -p $files
+
 # Removing pre-built binary; not required for build
 rm ports/cc3200/bootmgr/relocator/relocator.bin
 
 %build
 pushd ports/unix
 make axtls V=1 %{?_smp_mflags}
-make V=1 %{?_smp_mflags}
+make PYTHON=%{__python3} V=1 %{?_smp_mflags}
 popd
 
 execstack -c ports/unix/micropython
 
 %check
 pushd ports/unix
-make test
+make PYTHON=%{__python3} V=1 test
 popd
 
 %install
@@ -79,6 +82,9 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Thu Mar 15 2018 Miro Hrončok <mhroncok@redhat.com> - 1.9.3-4
+- Get rid of python2 build dependency
+
 * Thu Mar 15 2018 Iryna Shcherbina <ishcherb@redhat.com> - 1.9.3-3
 - Update Python 2 dependency declarations to new packaging standards
   (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
