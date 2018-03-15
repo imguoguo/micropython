@@ -21,7 +21,7 @@ Source1:       https://github.com/pfalcon/axtls/archive/%{axtls_commit}/axtls-%{
 Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_commit}/berkeley-db-1.xx-%{berkley_commit}.tar.gz
 
 # Other arches need active porting
-ExclusiveArch:  %{arm} %{ix86} x86_64
+ExclusiveArch:  %{arm} x86_64
 
 BuildRequires:  gcc
 BuildRequires:  python3-devel
@@ -84,6 +84,7 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %changelog
 * Thu Mar 15 2018 Miro Hrončok <mhroncok@redhat.com> - 1.9.3-4
 - Get rid of python2 build dependency
+- Temporarily disable i686, investigate later
 
 * Thu Mar 15 2018 Iryna Shcherbina <ishcherb@redhat.com> - 1.9.3-3
 - Update Python 2 dependency declarations to new packaging standards
