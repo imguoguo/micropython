@@ -4,7 +4,7 @@
 
 Name:           micropython
 Version:        1.9.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -82,6 +82,9 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Tue Jun 19 2018 Miro Hrončok <mhroncok@redhat.com> - 1.9.3-5
+- Rebuilt for Python 3.7
+
 * Thu Mar 15 2018 Miro Hrončok <mhroncok@redhat.com> - 1.9.3-4
 - Get rid of python2 build dependency
 - Temporarily disable i686, investigate later
