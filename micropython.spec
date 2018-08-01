@@ -3,8 +3,8 @@
 
 
 Name:           micropython
-Version:        1.9.3
-Release:        6%{?dist}
+Version:        1.9.4
+Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -14,7 +14,7 @@ License:        MIT and BSD
 URL:            http://micropython.org/
 Source0:        https://github.com/micropython/micropython/archive/v%{version}.tar.gz
 
-%global axtls_commit dac9176cac58cc5e49669a9a4d404a6f6dd7cc10
+%global axtls_commit 43a6e6bd3bbc03dc501e16b89fba0ef042ed3ea0
 Source1:       https://github.com/pfalcon/axtls/archive/%{axtls_commit}/axtls-%{axtls_commit}.tar.gz
 
 %global berkley_commit 35aaec4418ad78628a3b935885dd189d41ce779b
@@ -29,6 +29,20 @@ BuildRequires:  libffi-devel
 BuildRequires:  readline-devel
 BuildRequires:  execstack
 BuildRequires:  openssl-devel
+
+# Part of the tests runs MicroPython and CPython and compares the results.
+# MicroPython is ~3.4.
+# In Python 3.7 however, StopIteration handling in generators changed
+# and the results are no longer comparable.
+# PEP 479: https://www.python.org/dev/peps/pep-0479/
+# Upstream issue: https://github.com/micropython/micropython/issues/4000
+# We use the latest working CPython version in those test, setting the
+# MICROPY_CPYTHON3 environment variable.
+# Normal %%{__pytohn3} is used anywhere else.
+# There is no runtime dependency on this CPython (or any other).
+%global cpython_version_tests 3.6
+BuildRequires:  %{_bindir}/python%{cpython_version_tests}
+
 
 Provides:       bundled(axtls)
 Provides:       bundled(libdb) = 1.85
@@ -69,6 +83,7 @@ execstack -c ports/unix/micropython
 
 %check
 pushd ports/unix
+export MICROPY_CPYTHON3=python%{cpython_version_tests}
 make PYTHON=%{__python3} V=1 test
 popd
 
@@ -82,6 +97,10 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Wed Aug 01 2018 Miro Hrončok <mhroncok@redhat.com> - 1.9.4-1
+- Update to 1.9.4 (#1577187)
+- Use CPython 3.6 in tests that compare results due to PEP479 (#1604827)
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
