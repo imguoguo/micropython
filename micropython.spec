@@ -40,7 +40,10 @@ BuildRequires:  openssl-devel
 # MICROPY_CPYTHON3 environment variable.
 # Normal %%{__pytohn3} is used anywhere else.
 # There is no runtime dependency on this CPython (or any other).
-%global cpython_version_tests 3.6
+# This is fixed upstream now, but we keep the macros for future use
+# https://github.com/micropython/micropython/compare/4f9842ad...828f771
+Patch0:         python37_tests.patch
+%global cpython_version_tests 3.7
 BuildRequires:  %{_bindir}/python%{cpython_version_tests}
 
 
@@ -51,7 +54,7 @@ Provides:       bundled(libdb) = 1.85
 Implementation of Python 3 with very low memory footprint
 
 %prep
-%setup -q -n %{name}-%{version}
+%autosetup -p1 -n %{name}-%{version}
 
 # git submodules
 rmdir lib/axtls
