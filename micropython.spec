@@ -4,7 +4,7 @@
 
 Name:           micropython
 Version:        1.9.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -21,7 +21,7 @@ Source1:       https://github.com/pfalcon/axtls/archive/%{axtls_commit}/axtls-%{
 Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_commit}/berkeley-db-1.xx-%{berkley_commit}.tar.gz
 
 # Other arches need active porting
-ExclusiveArch:  %{arm} x86_64
+ExclusiveArch:  %{arm} %{ix86} x86_64
 
 BuildRequires:  gcc
 BuildRequires:  python3-devel
@@ -46,6 +46,8 @@ Patch0:         python37_tests.patch
 %global cpython_version_tests 3.7
 BuildRequires:  %{_bindir}/python%{cpython_version_tests}
 
+# https://github.com/micropython/micropython/issues/3637
+Patch1:        https://github.com/micropython/micropython/commit/c97607db5ccc03afbccacf853f2cd06305c28251.patch
 
 Provides:       bundled(axtls)
 Provides:       bundled(libdb) = 1.85
@@ -100,6 +102,9 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Sun Jan 13 2019 Miro Hrončok <mhroncok@redhat.com> - 1.9.4-2
+- Enable i686, fix a FTBFS (#1556924)
+
 * Wed Aug 01 2018 Miro Hrončok <mhroncok@redhat.com> - 1.9.4-1
 - Update to 1.9.4 (#1577187)
 - Use CPython 3.6 in tests that compare results due to PEP479 (#1604827)
