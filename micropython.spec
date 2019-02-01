@@ -4,7 +4,7 @@
 
 Name:           micropython
 Version:        1.9.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -102,6 +102,9 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Sun Jan 13 2019 Miro Hrončok <mhroncok@redhat.com> - 1.9.4-2
 - Enable i686, fix a FTBFS (#1556924)
 
