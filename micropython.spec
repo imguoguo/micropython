@@ -3,8 +3,8 @@
 
 
 Name:           micropython
-Version:        1.9.4
-Release:        3%{?dist}
+Version:        1.10
+Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -41,13 +41,8 @@ BuildRequires:  openssl-devel
 # Normal %%{__pytohn3} is used anywhere else.
 # There is no runtime dependency on this CPython (or any other).
 # This is fixed upstream now, but we keep the macros for future use
-# https://github.com/micropython/micropython/compare/4f9842ad...828f771
-Patch0:         python37_tests.patch
 %global cpython_version_tests 3.7
 BuildRequires:  %{_bindir}/python%{cpython_version_tests}
-
-# https://github.com/micropython/micropython/issues/3637
-Patch1:        https://github.com/micropython/micropython/commit/c97607db5ccc03afbccacf853f2cd06305c28251.patch
 
 Provides:       bundled(axtls)
 Provides:       bundled(libdb) = 1.85
@@ -78,6 +73,10 @@ pathfix.py -i %{__python3} -p $files
 # Removing pre-built binary; not required for build
 rm ports/cc3200/bootmgr/relocator/relocator.bin
 
+# https://github.com/micropython/micropython/issues/4457
+sed -i -e '/^int __GI_vsnprintf/d' lib/utils/printf.c
+
+
 %build
 pushd ports/unix
 make axtls V=1 %{?_smp_mflags}
@@ -102,6 +101,9 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Sun Feb 03 2019 Miro Hrončok <mhroncok@redhat.com> - 1.10-1
+- Update to 1.10 (#1669547)
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
