@@ -3,7 +3,7 @@
 
 
 Name:           micropython
-Version:        1.10
+Version:        1.11
 Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
@@ -101,6 +101,9 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Wed Jul 03 2019 Miro Hrončok <mhroncok@redhat.com> - 1.11-1
+- Update to 1.11 (#1714903)
+
 * Sun Feb 03 2019 Miro Hrončok <mhroncok@redhat.com> - 1.10-1
 - Update to 1.10 (#1669547)
 
