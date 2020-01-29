@@ -1,0 +1,24 @@
+From 3e558300669effa93e5e4dad4c8c4ecc167766c4 Mon Sep 17 00:00:00 2001
+From: Damien George <damien.p.george@gmail.com>
+Date: Wed, 17 Jul 2019 15:33:27 +1000
+Subject: [PATCH] tests/stress/recursive_iternext.py: Increase large depth to
+ 5000.
+
+So it fails correctly on Linux with clang.
+---
+ tests/stress/recursive_iternext.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/stress/recursive_iternext.py b/tests/stress/recursive_iternext.py
+index edb5a843f2..bbc389e726 100644
+--- a/tests/stress/recursive_iternext.py
++++ b/tests/stress/recursive_iternext.py
+@@ -14,7 +14,7 @@
+ try:
+     # large stack/heap, eg unix
+     [0] * 80000
+-    N = 2400
++    N = 5000
+ except:
+     try:
+         # medium, eg pyboard

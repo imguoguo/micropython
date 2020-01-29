@@ -20,6 +20,10 @@ Source1:       https://github.com/pfalcon/axtls/archive/%{axtls_commit}/axtls-%{
 %global berkley_commit 35aaec4418ad78628a3b935885dd189d41ce779b
 Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_commit}/berkeley-db-1.xx-%{berkley_commit}.tar.gz
 
+# tests/stress/recursive_iternext.py: Increase large depth to 5000
+# upstream added this for clang, but it fixes a test failure with gcc 10 as well
+Patch1:        https://github.com/micropython/micropython/commit/3e558300669effa93e5e4dad4c8c4ecc167766c4.patch
+
 # Other arches need active porting
 ExclusiveArch:  %{arm} %{ix86} x86_64
 
