@@ -3,8 +3,8 @@
 
 
 Name:           micropython
-Version:        1.11
-Release:        3%{?dist}
+Version:        1.12
+Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -19,10 +19,6 @@ Source1:       https://github.com/pfalcon/axtls/archive/%{axtls_commit}/axtls-%{
 
 %global berkley_commit 35aaec4418ad78628a3b935885dd189d41ce779b
 Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_commit}/berkeley-db-1.xx-%{berkley_commit}.tar.gz
-
-# tests/stress/recursive_iternext.py: Increase large depth to 5000
-# upstream added this for clang, but it fixes a test failure with gcc 10 as well
-Patch1:        https://github.com/micropython/micropython/commit/3e558300669effa93e5e4dad4c8c4ecc167766c4.patch
 
 # Other arches need active porting
 ExclusiveArch:  %{arm} %{ix86} x86_64
@@ -45,7 +41,7 @@ BuildRequires:  openssl-devel
 # Normal %%{__pytohn3} is used anywhere else.
 # There is no runtime dependency on this CPython (or any other).
 # This is fixed upstream now, but we keep the macros for future use
-%global cpython_version_tests 3.7
+%global cpython_version_tests 3.8
 BuildRequires:  %{_bindir}/python%{cpython_version_tests}
 
 Provides:       bundled(axtls)
@@ -77,15 +73,15 @@ pathfix.py -i %{__python3} -p $files
 # Removing pre-built binary; not required for build
 rm ports/cc3200/bootmgr/relocator/relocator.bin
 
-# https://github.com/micropython/micropython/issues/4457
-sed -i -e '/^int __GI_vsnprintf/d' lib/utils/printf.c
-
-
 %build
-pushd ports/unix
-make axtls V=1 %{?_smp_mflags}
-make PYTHON=%{__python3} V=1 %{?_smp_mflags}
-popd
+# Build the cross-compiler
+%make_build -C mpy-cross
+
+# Build the unbundled submodules
+%make_build -C ports/unix axtls V=1
+
+# Build the interpreter
+%make_build -C ports/unix PYTHON=%{__python3} V=1
 
 execstack -c ports/unix/micropython
 
@@ -105,6 +101,9 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Wed Apr 15 2020 Charalampos Stratakis <cstratak@redhat.com> - 1.12-1
+- Update to 1.12 (#1785781)
+
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
