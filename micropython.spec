@@ -101,7 +101,7 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
-* Mon Sep 07 2020 Tomas Hrnciar <thrnciar@redhat.com> - 1.12-3
+* Mon Sep 07 2020 Tomas Hrnciar <thrnciar@redhat.com> - 1.13-1
 - Update to 1.13 (#1874689)
 
 * Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.12-2
