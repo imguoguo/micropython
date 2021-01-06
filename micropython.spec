@@ -23,6 +23,7 @@ Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_com
 # Other arches need active porting
 ExclusiveArch:  %{arm} %{ix86} x86_64
 
+BuildRequires: make
 BuildRequires:  gcc
 BuildRequires:  python3-devel
 BuildRequires:  libffi-devel
