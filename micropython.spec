@@ -3,7 +3,7 @@
 
 
 Name:           micropython
-Version:        1.15
+Version:        1.16
 Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
@@ -19,10 +19,6 @@ Source1:       https://github.com/pfalcon/axtls/archive/%{axtls_commit}/axtls-%{
 
 %global berkley_commit 35aaec4418ad78628a3b935885dd189d41ce779b
 Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_commit}/berkeley-db-1.xx-%{berkley_commit}.tar.gz
-
-# Fix build on 32bit architectures
-# Merged upstream
-Patch7119:     https://github.com/micropython/micropython/pull/7119.patch
 
 # Other arches need active porting
 ExclusiveArch:  %{arm} %{ix86} x86_64
@@ -106,6 +102,9 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Thu Jun 24 2021 Tomas Hrnciar <thrnciar@redhat.com> - 1.16-1
+- Update to 1.16
+
 * Thu May 06 2021 Miro Hrončok <mhroncok@redhat.com> - 1.15-1
 - Update to 1.15
 - Fixes rhbz#1950805
