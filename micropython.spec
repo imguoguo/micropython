@@ -3,8 +3,8 @@
 
 
 Name:           micropython
-Version:        1.16
-Release:        2%{?dist}
+Version:        1.17
+Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -14,8 +14,8 @@ License:        MIT and BSD
 URL:            http://micropython.org/
 Source0:        https://github.com/micropython/micropython/archive/v%{version}.tar.gz
 
-%global axtls_commit 43a6e6bd3bbc03dc501e16b89fba0ef042ed3ea0
-Source1:       https://github.com/pfalcon/axtls/archive/%{axtls_commit}/axtls-%{axtls_commit}.tar.gz
+%global axtls_commit 531cab9c278c947d268bd4c94ecab9153a961b43
+Source1:       https://github.com/micropython/axtls/archive/%{axtls_commit}/axtls-%{axtls_commit}.tar.gz
 
 %global berkley_commit 35aaec4418ad78628a3b935885dd189d41ce779b
 Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_commit}/berkeley-db-1.xx-%{berkley_commit}.tar.gz
@@ -23,7 +23,7 @@ Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_com
 # Other arches need active porting
 ExclusiveArch:  %{arm} %{ix86} x86_64
 
-BuildRequires: make
+BuildRequires:  make
 BuildRequires:  gcc
 BuildRequires:  python3-devel
 BuildRequires:  libffi-devel
@@ -32,20 +32,15 @@ BuildRequires:  execstack
 BuildRequires:  openssl-devel
 
 # Part of the tests runs MicroPython and CPython and compares the results.
-# MicroPython is ~3.4.
-# In Python 3.7 however, StopIteration handling in generators changed
-# and the results are no longer comparable.
-# PEP 479: https://www.python.org/dev/peps/pep-0479/
-# Upstream issue: https://github.com/micropython/micropython/issues/4000
+# MicroPython is ~3.4, but the testing framework supports newer Pythons as well.
 # We use the latest working CPython version in those test, setting the
 # MICROPY_CPYTHON3 environment variable.
-# Normal %%{__pytohn3} is used anywhere else.
+# Normal %%{pytohn3} is used anywhere else.
 # There is no runtime dependency on this CPython (or any other).
-# This is fixed upstream now, but we keep the macros for future use
-%global cpython_version_tests 3.8
+%global cpython_version_tests 3.9
 BuildRequires:  %{_bindir}/python%{cpython_version_tests}
 
-Provides:       bundled(axtls)
+Provides:       bundled(axtls) = 2.1.5
 Provides:       bundled(libdb) = 1.85
 
 %description
@@ -69,7 +64,7 @@ head -n 32 lib/berkeley-db-1.xx/db/db.c > LICENSE.libdb
 
 # Fix shebangs
 files=$(grep -rl '#!/usr/bin/env python')
-pathfix.py -i %{__python3} -p $files
+pathfix.py -i %{python3} -p $files
 
 # Removing pre-built binary; not required for build
 rm ports/cc3200/bootmgr/relocator/relocator.bin
@@ -82,14 +77,14 @@ rm ports/cc3200/bootmgr/relocator/relocator.bin
 %make_build -C ports/unix axtls V=1
 
 # Build the interpreter
-%make_build -C ports/unix PYTHON=%{__python3} V=1
+%make_build -C ports/unix PYTHON=%{python3} V=1
 
 execstack -c ports/unix/micropython
 
 %check
 pushd ports/unix
 export MICROPY_CPYTHON3=python%{cpython_version_tests}
-make PYTHON=%{__python3} V=1 test
+make PYTHON=%{python3} V=1 test
 popd
 
 %install
@@ -102,6 +97,10 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Fri Sep 03 2021 Miro Hrončok <mhroncok@redhat.com> - 1.17-1
+- Update to 1.17
+- Fixes: rhbz#2000869
+
 * Thu Jul 22 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.16-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
