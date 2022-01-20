@@ -4,7 +4,7 @@
 
 Name:           micropython
 Version:        1.17
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -97,6 +97,9 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1.17-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Sat Jan 08 2022 Miro Hrončok <mhroncok@redhat.com> - 1.17-2
 - Rebuilt for https://fedoraproject.org/wiki/Changes/LIBFFI34
 
