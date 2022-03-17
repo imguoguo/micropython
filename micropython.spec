@@ -1,10 +1,17 @@
 %global debug_package %{nil}
 %global _hardened_build 1
 
+# NLR code is incompatible with Link Time Optimizations
+# https://github.com/micropython/micropython/issues/8421
+%global _lto_cflags %nil
+
+# Add -Wformat as it's required along with -Wformat-security
+# set by redhat-rpm-config
+%global _warning_options %_warning_options -Wformat
 
 Name:           micropython
-Version:        1.17
-Release:        3%{?dist}
+Version:        1.18
+Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -97,6 +104,11 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Fri Mar 04 2022 Charalampos Stratakis <cstratak@redhat.com> - 1.18-1
+- Update to 1.18
+- Disable Link Time Optimizations
+- Fixes: rhbz#2046737, rhbz#2041651
+
 * Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1.17-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
