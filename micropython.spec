@@ -1,5 +1,4 @@
 %global debug_package %{nil}
-%global _hardened_build 1
 
 # NLR code is incompatible with Link Time Optimizations
 # https://github.com/micropython/micropython/issues/8421
