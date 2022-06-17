@@ -9,7 +9,7 @@
 %global _warning_options %_warning_options -Wformat
 
 Name:           micropython
-Version:        1.18
+Version:        1.19.1
 Release:        1%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
@@ -103,6 +103,10 @@ install -pm 755 ports/unix/micropython %{buildroot}%{_bindir}
 %{_bindir}/micropython
 
 %changelog
+* Fri Jun 17 2022 Charalampos Stratakis <cstratak@redhat.com> - 1.19.1-1
+- Update to 1.19.1
+- Fixes: rhbz#2097936
+
 * Fri Mar 04 2022 Charalampos Stratakis <cstratak@redhat.com> - 1.18-1
 - Update to 1.18
 - Disable Link Time Optimizations
