@@ -27,7 +27,12 @@ Source1:       https://github.com/micropython/axtls/archive/%{axtls_commit}/axtl
 Source2:       https://github.com/pfalcon/berkeley-db-1.xx/archive/%{berkley_commit}/berkeley-db-1.xx-%{berkley_commit}.tar.gz
 
 # Other arches need active porting
+%if 0%{?fedora} >= 37 || 0%{?rhel} >= 10
+# https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
+ExclusiveArch:  %{arm} x86_64
+%else
 ExclusiveArch:  %{arm} %{ix86} x86_64
+%endif
 
 BuildRequires:  make
 BuildRequires:  gcc
