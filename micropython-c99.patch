@@ -1,0 +1,24 @@
+axtls: Additional header files for building axTLS
+
+MicroPython overrides the axTLS port configuration file, but fails
+to include <arpa/inet.h> (needed for htonl) and <sys/time.h>
+(needed for gettimeofday).  This results in build failures with
+compilers which do not support implicit function declarations
+(which were removed from C in 1999).
+
+Submitted upstream: <https://github.com/micropython/micropython/pull/10203>
+
+diff --git micropython-1.19.1/extmod/axtls-include/axtls_os_port.h micropython-1.19.1/extmod/axtls-include/axtls_os_port.h
+index ef2683acfc7016b5..b9a6ffe56cf121e5 100644
+--- micropython-1.19.1/extmod/axtls-include/axtls_os_port.h
++++ micropython-1.19.1/extmod/axtls-include/axtls_os_port.h
+@@ -26,7 +26,9 @@
+ #ifndef AXTLS_OS_PORT_H
+ #define AXTLS_OS_PORT_H
+ 
++#include <arpa/inet.h>
+ #include <errno.h>
++#include <sys/time.h>
+ #include "py/stream.h"
+ #include "lib/crypto-algorithms/sha256.h"
+ 
