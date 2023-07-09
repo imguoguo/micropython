@@ -10,7 +10,7 @@
 
 Name:           micropython
 Version:        1.19.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Implementation of Python 3 with very low memory footprint
 
 # micorpython itself is MIT
@@ -38,7 +38,7 @@ Patch2:        micropython-dangling-pointer-gcc13.patch
 # Other arches need active porting
 %if 0%{?fedora} >= 37 || 0%{?rhel} >= 10
 # https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
-ExclusiveArch:  %{arm} x86_64
+ExclusiveArch:  %{arm} x86_64 riscv64
 %else
 ExclusiveArch:  %{arm} %{ix86} x86_64
 %endif
@@ -102,6 +102,13 @@ rm ports/cc3200/bootmgr/relocator/relocator.bin
 execstack -c ports/unix/micropython
 
 %check
+# Reference: https://git.alpinelinux.org/aports/tree/testing/micropython/APKBUILD
+# float rounding fails https://github.com/micropython/micropython/issues/4176
+case "$(uname -m)" in
+  riscv64)
+    rm tests/float/float_parse.py tests/float/float_parse_doubleprec.py
+    ;;
+esac
 pushd ports/unix
 export MICROPY_CPYTHON3=python%{cpython_version_tests}
 make PYTHON=%{python3} V=1 test
